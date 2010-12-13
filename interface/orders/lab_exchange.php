@@ -20,7 +20,7 @@ $client = new LabExchangeClient($GLOBALS['lab_exchange_siteid'],$GLOBALS['lab_ex
 
 // Make the request
 $response = $client->sendRequest("results", "GET");
-$lab_query_report .= "Lab Query Status:<hr>";
+$lab_query_report .= xl("Lab Query Status") . "<hr>";
 
 // Check response for success or error
 if ($response->IsError)
@@ -242,10 +242,10 @@ else {
         // Check response for success or error.
         if ($response->IsError)
             echo xl("Error confirming receipt of lab results") . ": {$response->ErrorMessage}<br>\n";
-        else {
-            echo xl("Success confirming receipt of lab result") . " <br>\n";
-            echo $response->ResponseXml;
-        }
+//        else {
+//            echo xl("Success confirming receipt of lab result") . " <br>\n";
+//            echo $response->ResponseXml;
+//        }
     }
 
     // report on lab_patient_errors
@@ -255,7 +255,19 @@ else {
         $lab_query_report .= "<tr><td>" .xl("No errors found"). "</td></tr>";
     else
     {
-        $lab_query_report .= "<tr><td>First Name</td><td>Middle Name</td><td>Last Name</td><td>DoB</td><td>Gender</td><td>External Id</td><td>SSN</td><td>Address</td><td>City</td><td>State</td><td>Zip</td><td>Home Phone</td></tr>";
+        $lab_query_report .= "<tr><td>" . 
+            xl("First Name") . "</td><td>" .
+            xl("Middle Name") . "</td><td>" .
+            xl("Last Name") . "</td><td>" .
+            xl("DoB") . "</td><td>" .
+            xl("Gender") . "</td><td>" .
+            xl("External Id") . "</td><td>" .
+            xl("SSN") . "</td><td>" .
+            xl("Address") . "</td><td>" .
+            xl("City") . "</td><td>".
+            xl("State") . "</td><td>" .
+            xl("Zip") . "</td><td>" .
+            xl("Home Phone") . "</td></tr>";
         foreach ($lab_patient_errors as $labResult) {
             $patient = $labResult->Patient;
              $lab_query_report .= "<tr><td>{$patient->FirstName}</td>" .
@@ -281,7 +293,19 @@ else {
         $lab_query_report .= "<tr><td>" . xl("No new results found") . "</td></tr>";
     else
     {
-        $lab_query_report .= "<tr><td>First Name</td><td>Middle Name</td><td>Last Name</td><td>DoB</td><td>Gender</td><td>External Id</td><td>SSN</td><td>Address</td><td>City</td><td>State</td><td>Zip</td><td>Home Phone</td></tr>";
+        $lab_query_report .= "<tr><td>" . 
+            xl("First Name") . "</td><td>" .
+            xl("Middle Name") . "</td><td>" .
+            xl("Last Name") .   "</td><td>" .
+            xl("DoB") . "</td><td>" .
+            xl("Gender") . "</td><td>" .
+            xl("External Id") . "</td><td>" .
+            xl("SSN") . "</td><td>" .
+            xl("Address") . "</td><td>" .
+            xl("City") . "</td><td>" .
+            xl("State") . "</td><td>" .
+            xl("Zip") . "</td><td>" .
+            xl("Home Phone") . "</td></tr>";
         foreach ($lab_patient_success as $labResult) {
             $patient = $labResult->Patient;
              $lab_query_report .= "<tr><td>{$patient->FirstName}</td>" .

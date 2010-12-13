@@ -134,46 +134,37 @@ if ($_GET["mode"] == "update") {
     set_user_aro($_GET['access_group'], $user_data["username"],
       formData('fname','G'), formData('mname','G'), formData('lname','G'));
   }
-        #
-        #  Laboratory
-        #
-        $laboratory_count = sqlStatement("select count(*) as count from laboratories");
-        $lab_count_row = sqlFetchArray($laboratory_count);
-
-        if($lab_count_row['count'] > 0)
-        {
-            for($lab_id=1; $lab_id <= $lab_count_row['count']; $lab_id++)
-            {
-                // verify provider/lab relationship record exists
-                $lab_provider_count = sqlFetchArray(sqlStatement("select count(*) as count from laboratory_providers where laboratory_id = {$lab_id} and user_id = {$_GET["id"]}"));
-                if ($lab_provider_count['count'] == 0)
-                {
-                    sqlStatement("insert into laboratory_providers (user_id, laboratory_id) values ({$_GET["id"]}, {$lab_id})");
-                }
-
-                // update provider_fname
-                if (isset($_GET["lab_{$lab_id}_provider_fname"]))
-                {
-                    $tqvar = formData("lab_{$lab_id}_provider_fname",'G');
-                    sqlStatement("UPDATE laboratory_providers SET provider_fname='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$lab_id}");
-                }
-
-                // update provider_lname
-                if (isset($_GET["lab_{$lab_id}_provider_lname"]))
-                {
-                    $tqvar = formData("lab_{$lab_id}_provider_lname",'G');
-                    sqlStatement("UPDATE laboratory_providers SET provider_lname='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$lab_id}");
-                }
-
-                // update provider_id
-                if (isset($_GET["lab_{$lab_id}_provider_id"]))
-                {
-                    $tqvar = formData("lab_{$lab_id}_provider_id",'G');
-                    sqlStatement("UPDATE laboratory_providers SET provider_id='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$lab_id}");
-                }
-            }
+    #
+    #  Laboratory
+    #
+    $laboratory_info = sqlStatement("select id from laboratories");
+    while ($row = sqlFetchArray($laboratory_info)) {
+        // verify provider/lab relationship record exists
+        $lab_provider_count = sqlFetchArray(sqlStatement("select count(*) as count from laboratory_providers where laboratory_id = {$row['id']} and user_id = {$_GET["id"]}"));
+        if ($lab_provider_count['count'] == 0) {
+            sqlStatement("insert into laboratory_providers (user_id, laboratory_id) values ({$_GET["id"]}, {$row['id']})");
         }
-  $ws = new WSProvider($_GET['id']);
+
+        // update provider_fname
+        if (isset($_GET["lab_{$row['id']}_provider_fname"])) {
+            $tqvar = formData("lab_{$row['id']}_provider_fname", 'G');
+            sqlStatement("UPDATE laboratory_providers SET provider_fname='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$row['id']}");
+        }
+
+        // update provider_lname
+        if (isset($_GET["lab_{$row['id']}_provider_lname"])) {
+            $tqvar = formData("lab_{$row['id']}_provider_lname", 'G');
+            sqlStatement("UPDATE laboratory_providers SET provider_lname='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$row['id']}");
+        }
+
+        // update provider_id
+        if (isset($_GET["lab_{$row['id']}_provider_id"])) {
+            $tqvar = formData("lab_{$row['id']}_provider_id", 'G');
+            sqlStatement("UPDATE laboratory_providers SET provider_id='$tqvar' where user_id={$_GET["id"]} and laboratory_id = {$row['id']}");
+        }
+    }
+
+    $ws = new WSProvider($_GET['id']);
 
   /*Dont move usergroup_admin (1).php just close window
   // On a successful update, return to the users list.
